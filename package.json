@@ -4,5 +4,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.19.0"
-  }
+  },
+  "scripts": {
+  "start": "node server.js"
+}
 }
