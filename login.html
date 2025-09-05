@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SalesFlow CRM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --danger: #e63946;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: #212529;
+            display: flex;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-container {
+            display: flex;
+            width: 900px;
+            height: 550px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            top: -100px;
+            left: -100px;
+        }
+        
+        .auth-left::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            bottom: -50px;
+            right: -50px;
+        }
+        
+        .auth-left h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .auth-left p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .auth-left ul {
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .auth-left li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .auth-left li i {
+            margin-right: 10px;
+            background: rgba(255,255,255,0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-right {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+        }
+        
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        @media (max-width: 992px) {
+            .auth-container {
+                flex-direction: column;
+                width: 100%;
+                height: auto;
+                border-radius: 0;
+            }
+            
+            .auth-left, .auth-right {
+                padding: 30px;
+            }
+            
+            .auth-left {
+                order: 2;
+            }
+            
+            .auth-right {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-left">
+            <h1>Welcome to SalesFlow CRM</h1>
+            <p>Streamline your sales process and manage customer relationships effectively.</p>
+            <ul>
+                <li><i class="fas fa-check"></i> Track leads and conversions</li>
+                <li><i class="fas fa-check"></i> Manage customer interactions</li>
+                <li><i class="fas fa-check"></i> Analyze sales performance</li>
+                <li><i class="fas fa-check"></i> Collaborate with your team</li>
+            </ul>
+        </div>
+        
+        <div class="auth-right">
+            <div class="logo">
+                <i class="fas fa-stream"></i>
+                <h1>SalesFlow CRM</h1>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Login</div>
+                <div class="auth-tab" data-tab="register">Register</div>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                    <div class="error-message" id="loginEmailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    <div class="error-message" id="loginPasswordError"></div>
+                </div>
+                
+                <button type="submit" class="btn-primary">Login</button>
+                
+                <div class="auth-footer">
+                    <a href="#" id="forgotPassword">Forgot your password?</a>
+                </div>
+            </form>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" placeholder="Enter your full name" required>
+                    <div class="error-message" id="regNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                    <div class="error-message" id="regEmailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" placeholder="Create a password" required>
+                    <div class="error-message" id="regPasswordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirm your password" required>
+                    <div class="error-message" id="regConfirmPasswordError"></div>
+                </div>
+                
+                <button type="submit" class="btn-primary">Create Account</button>
+                
+                <div class="auth-footer">
+                    By registering, you agree to our <a href="#">Terms of Service</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+        
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                authForms.forEach(form => form.classList.remove('active'));
+                document.getElementById(tabName + 'Form').classList.add('active');
+            });
+        });
+        
+        // Form validation and submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Basic validation
+            let isValid = true;
+            
+            if (!email) {
+                document.getElementById('loginEmailError').textContent = 'Email is required';
+                document.getElementById('loginEmailError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('loginEmailError').style.display = 'none';
+            }
+            
+            if (!password) {
+                document.getElementById('loginPasswordError').textContent = 'Password is required';
+                document.getElementById('loginPasswordError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('loginPasswordError').style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            // Submit login request
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = 'index.html';
+                } else {
+                    document.getElementById('loginPasswordError').textContent = data.error || 'Login failed';
+                    document.getElementById('loginPasswordError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('loginPasswordError').textContent = 'Network error. Please try again.';
+                document.getElementById('loginPasswordError').style.display = 'block';
+            }
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            // Validation
+            let isValid = true;
+            
+            if (!name) {
+                document.getElementById('regNameError').textContent = 'Name is required';
+                document.getElementById('regNameError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('regNameError').style.display = 'none';
+            }
+            
+            if (!email) {
+                document.getElementById('regEmailError').textContent = 'Email is required';
+                document.getElementById('regEmailError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('regEmailError').style.display = 'none';
+            }
+            
+            if (!password) {
+                document.getElementById('regPasswordError').textContent = 'Password is required';
+                document.getElementById('regPasswordError').style.display = 'block';
+                isValid = false;
+            } else if (password.length < 6) {
+                document.getElementById('regPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('regPasswordError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('regPasswordError').style.display = 'none';
+            }
+            
+            if (!confirmPassword) {
+                document.getElementById('regConfirmPasswordError').textContent = 'Please confirm your password';
+                document.getElementById('regConfirmPasswordError').style.display = 'block';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                document.getElementById('regConfirmPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('regConfirmPasswordError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('regConfirmPasswordError').style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            // Submit registration request
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    alert('Registration successful! Please login with your credentials.');
+                    document.querySelector('.auth-tab[data-tab="login"]').click();
+                    document.getElementById('regName').value = '';
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPassword').value = '';
+                    document.getElementById('regConfirmPassword').value = '';
+                } else {
+                    document.getElementById('regEmailError').textContent = data.error || 'Registration failed';
+                    document.getElementById('regEmailError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                document.getElementById('regEmailError').textContent = 'Network error. Please try again.';
+                document.getElementById('regEmailError').style.display = 'block';
+            }
+        });
+        
+        // Forgot password
+        document.getElementById('forgotPassword').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Password reset functionality coming soon!');
+        });
+    </script>
+</body>
+</html>
